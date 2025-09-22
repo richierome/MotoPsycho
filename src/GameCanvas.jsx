@@ -1,8 +1,9 @@
 // src/GameCanvas.jsx
 import React, { useEffect, useState } from "react";
+import tankerImg from "./assets/tanker.png"; // Make sure this path is correct
 
 const GameCanvas = () => {
-  const [playerX, setPlayerX] = useState(100);
+  const [playerX] = useState(100);
   const [playerY, setPlayerY] = useState(200);
   const [speed, setSpeed] = useState(15);
   const [obstacles, setObstacles] = useState([]);
@@ -14,15 +15,17 @@ const GameCanvas = () => {
   const [deliveryMade, setDeliveryMade] = useState(false);
 
   const ROUTE_LENGTH = 15000;
-
   const GAS_STATION_WIDTH = 80;
   const GAS_STATION_HEIGHT = 100;
-  const [gasStationX, setGasStationX] = useState(800); // start off-screen
+  const [gasStationX, setGasStationX] = useState(800);
   const [gasStationY, setGasStationY] = useState(200);
-  const GAS_SPEED = 3; 
-  const GAS_APPEAR_DISTANCE = 10000; 
+  const GAS_SPEED = 3;
+  const GAS_APPEAR_DISTANCE = 10000;
 
-  // --- Keyboard input ---
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => setIsMobile(window.innerWidth <= 768), []);
+
+  // Keyboard input (desktop)
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === "ArrowUp") setPlayerY((y) => Math.max(y - 20, 0));
@@ -40,7 +43,7 @@ const GameCanvas = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [playerX, playerY]);
 
-  // --- Obstacles spawn ---
+  // Obstacles spawn
   useEffect(() => {
     if (gameOver || deliveryMade) return;
     const interval = setInterval(() => {
@@ -59,10 +62,9 @@ const GameCanvas = () => {
     return () => clearInterval(interval);
   }, [gameOver, deliveryMade]);
 
-  // --- Game loop ---
+  // Game loop
   useEffect(() => {
     if (gameOver || deliveryMade) return;
-
     const loop = setInterval(() => {
       setBgX((x) => (x - speed) % 800);
       setDistance((d) => d + speed);
@@ -104,14 +106,11 @@ const GameCanvas = () => {
             playerX + 50 > obs.x &&
             playerY < obs.y + obs.height &&
             playerY + 30 > obs.y;
-
           if (collision) newLives -= 1;
           return !collision;
         });
-
         if (newLives <= 0) setGameOver(true);
         else if (newLives !== lives) setLives(newLives);
-
         return remaining;
       });
 
@@ -135,7 +134,22 @@ const GameCanvas = () => {
     }, 30);
 
     return () => clearInterval(loop);
-  }, [speed, bullets, gameOver, lives, distance, gasStationX, gasStationY, deliveryMade]);
+  }, [speed, bullets, gameOver, lives, distance, gasStationX, gasStationY, deliveryMade, playerX, playerY]);
+
+  const mobileButtonCommon = {
+    position: "absolute",
+    width: 60,
+    height: 60,
+    borderRadius: "50%",
+    background: "rgba(255,255,255,0.3)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    fontSize: "2rem",
+    color: "#000",
+    userSelect: "none",
+    zIndex: 1000,
+  };
 
   return (
     <div style={{ position: "relative", width: 800, height: 400 }}>
@@ -144,8 +158,8 @@ const GameCanvas = () => {
         <rect x={bgX} y={350} width={800} height={50} fill="gray" />
         <rect x={bgX + 800} y={350} width={800} height={50} fill="gray" />
 
-        {/* Player */}
-        <rect x={playerX} y={playerY} width={50} height={30} fill="blue" />
+        {/* Player Tanker */}
+        <image href={tankerImg} x={playerX} y={playerY} width={200} height={150} />
 
         {/* Obstacles */}
         {obstacles.map((o) => (
@@ -170,90 +184,25 @@ const GameCanvas = () => {
         <text x={10} y={40} fontSize={16} fill="black">Distance: {distance} / {ROUTE_LENGTH}</text>
         <text x={10} y={60} fontSize={16} fill="black">Lives: {lives}</text>
 
-        {gameOver && !deliveryMade && (
-          <text x={200} y={200} fontSize={28} fill="red">❌ Game Over</text>
-        )}
-
-        {deliveryMade && (
-          <text x={200} y={200} fontSize={28} fill="green">✅ Delivery Made!</text>
-        )}
+        {gameOver && !deliveryMade && <text x={200} y={200} fontSize={28} fill="red">❌ Game Over</text>}
+        {deliveryMade && <text x={200} y={200} fontSize={28} fill="green">✅ Delivery Made!</text>}
       </svg>
 
-        {/* --- MOBILE TOUCH BUTTONS (STACKED) --- */}
-    <div
-      onTouchStart={() => setPlayerY((y) => Math.max(y - 20, 0))}
-      style={{
-        position: "absolute",
-        left: "50%",
-        transform: "translateX(-50%)",
-        bottom: 140, // top-most
-        width: 60,
-        height: 60,
-        background: "rgba(255,255,255,0.3)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        borderRadius: "50%",
-        zIndex: 1000,
-        fontSize: "2rem",
-        color: "#000",
-        userSelect: "none",
-      }}
-    >
-      ▲
-    </div>
-
-    <div
-      onTouchStart={() => {
-        setBullets((prev) => [
-          ...prev,
-          { id: Date.now(), x: playerX + 50, y: playerY + 10, width: 8, height: 4 },
-        ]);
-      }}
-      style={{
-        position: "absolute",
-        left: "50%",
-        transform: "translateX(-50%)",
-        bottom: 80, // middle
-        width: 60,
-        height: 60,
-        background: "rgba(255,0,0,0.5)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        borderRadius: "50%",
-        zIndex: 1000,
-        fontSize: "2rem",
-        color: "#fff",
-        userSelect: "none",
-      }}
-    >
-      🔫
-    </div>
-
-    <div
-      onTouchStart={() => setPlayerY((y) => Math.min(y + 20, 380))}
-      style={{
-        position: "absolute",
-        left: "50%",
-        transform: "translateX(-50%)",
-        bottom: 20, // bottom-most
-        width: 60,
-        height: 60,
-        background: "rgba(255,255,255,0.3)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        borderRadius: "50%",
-        zIndex: 1000,
-        fontSize: "2rem",
-        color: "#000",
-        userSelect: "none",
-      }}
-    >
-      ▼
-    </div>
-
+      {/* Mobile controls */}
+      {isMobile && (
+        <>
+          <div onTouchStart={() => setPlayerY((y) => Math.max(y - 20, 0))} style={{ ...mobileButtonCommon, bottom: 140, left: 60 }}>▲</div>
+          <div onTouchStart={() => setPlayerY((y) => Math.min(y + 20, 380))} style={{ ...mobileButtonCommon, bottom: 20, left: 60 }}>▼</div>
+          <div onTouchStart={() => setSpeed((s) => Math.max(s - 1, 0))} style={{ ...mobileButtonCommon, bottom: 80, left: 0 }}>◀︎</div>
+          <div onTouchStart={() => setSpeed((s) => Math.min(s + 1, 20))} style={{ ...mobileButtonCommon, bottom: 80, left: 120 }}>▶︎</div>
+          <div
+            onTouchStart={() => setBullets((prev) => [...prev, { id: Date.now(), x: playerX + 50, y: playerY + 10, width: 8, height: 4 }])}
+            style={{ ...mobileButtonCommon, bottom: 80, right: 20 }}
+          >
+            ◉
+          </div>
+        </>
+      )}
     </div>
   );
 };

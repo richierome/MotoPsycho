@@ -36,7 +36,7 @@ function GameMenu({ onStartGame }) {
       const fadeIn = setInterval(() => {
         if (volume < 1) {
           volume += 0.02;
-          gainNodeRef.current.gain.value = Math.min(volume, 1);
+          gainNodeRef.current.gain.value = Math.min(volume, 0.25);
         } else clearInterval(fadeIn);
       }, 50);
     }
