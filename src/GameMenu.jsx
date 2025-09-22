@@ -10,7 +10,7 @@ function GameMenu({ onStartGame }) {
     setMenuStage("select");
 
     if (!audioRef.current) {
-      const audio = new Audio("/assests/theTake.mp3");
+      const audio = new Audio(`${process.env.PUBLIC_URL}/assests/theTake.mp3`);
       audio.loop = true;
       audioRef.current = audio;
 
@@ -23,7 +23,9 @@ function GameMenu({ onStartGame }) {
       gainNodeRef.current = gainNode;
 
       track.connect(gainNode).connect(audioCtx.destination);
-      audio.play().catch(() => console.log("User interaction required to start music."));
+      audio.play().catch(() =>
+        console.log("User interaction required to start music.")
+      );
     }
   };
 
@@ -78,7 +80,11 @@ function GameMenu({ onStartGame }) {
   if (menuStage === "start") {
     return (
       <div style={containerStyle}>
-        <img src="/assests/cover.png" alt="Game Cover" style={backgroundStyle} />
+        <img
+          src={`${process.env.PUBLIC_URL}/assests/cover.png`}
+          alt="Game Cover"
+          style={backgroundStyle}
+        />
         <h1 style={{ fontSize: "10vw", marginBottom: "5vh" }}>MotoPsycho</h1>
         <button onClick={handleStartClick} style={buttonStyle("#ff0000")}>
           Start Game
@@ -90,13 +96,25 @@ function GameMenu({ onStartGame }) {
   if (menuStage === "select") {
     return (
       <div style={containerStyle}>
-        <img src="/assests/cover.png" alt="Game Cover" style={backgroundStyle} />
-        <h2 style={{ fontSize: "8vw", marginBottom: "5vh" }}>Choose Your Vehicle</h2>
+        <img
+          src={`${process.env.PUBLIC_URL}/assests/cover.png`}
+          alt="Game Cover"
+          style={backgroundStyle}
+        />
+        <h2 style={{ fontSize: "8vw", marginBottom: "5vh" }}>
+          Choose Your Vehicle
+        </h2>
         <div style={{ display: "flex", gap: "5vw" }}>
-          <button onClick={() => handleSelection("bike")} style={buttonStyle("#00aaff")}>
+          <button
+            onClick={() => handleSelection("bike")}
+            style={buttonStyle("#00aaff")}
+          >
             Bike
           </button>
-          <button onClick={() => handleSelection("tanker")} style={buttonStyle("#ffaa00")}>
+          <button
+            onClick={() => handleSelection("tanker")}
+            style={buttonStyle("#ffaa00")}
+          >
             Tanker
           </button>
         </div>

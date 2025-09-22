@@ -4,22 +4,21 @@ import GameCanvas from "./GameCanvas";
 
 function App() {
   const [gameStarted, setGameStarted] = useState(false);
-  const [vehicle, setVehicle] = useState(null);
+  const [selectedVehicle, setSelectedVehicle] = useState(null);
 
-  const handleStartGame = (selectedVehicle) => {
-    setVehicle(selectedVehicle);
+  const handleStartGame = (vehicle) => {
+    setSelectedVehicle(vehicle);
     setGameStarted(true);
   };
 
   return (
-    <>
+    <div style={{ height: "100vh", width: "100vw", overflow: "hidden" }}>
       {!gameStarted ? (
-        // MUST be `onStartGame={handleStartGame}`
         <GameMenu onStartGame={handleStartGame} />
       ) : (
-        <GameCanvas vehicle={vehicle} />
+        <GameCanvas vehicle={selectedVehicle} />
       )}
-    </>
+    </div>
   );
 }
 
