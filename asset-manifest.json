@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/MotoPsycho/static/css/main.e6c13ad2.css",
+    "main.js": "/MotoPsycho/static/js/main.eec31010.js",
+    "static/js/453.cb75d7c4.chunk.js": "/MotoPsycho/static/js/453.cb75d7c4.chunk.js",
+    "static/media/fire.png": "/MotoPsycho/static/media/fire.5bc93ce309d6f552c35e.png",
+    "static/media/cool.png": "/MotoPsycho/static/media/cool.d6c74274cf3e908c592f.png",
+    "static/media/truck1.png": "/MotoPsycho/static/media/truck1.241da4fa7667a16f9416.png",
+    "static/media/gasStation.png": "/MotoPsycho/static/media/gasStation.9874044df8ad092cb0f3.png",
+    "static/media/city.jpg": "/MotoPsycho/static/media/city.08b698566728e1b0d419.jpg",
+    "index.html": "/MotoPsycho/index.html",
+    "main.e6c13ad2.css.map": "/MotoPsycho/static/css/main.e6c13ad2.css.map",
+    "main.eec31010.js.map": "/MotoPsycho/static/js/main.eec31010.js.map",
+    "453.cb75d7c4.chunk.js.map": "/MotoPsycho/static/js/453.cb75d7c4.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.eec31010.js"
+  ]
+}
