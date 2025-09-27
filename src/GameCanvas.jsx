@@ -4,6 +4,7 @@ import truck1Img from "./assets/truck1.png";
 import cityImg from "./assets/city.jpg";
 import coolImg from "./assets/cool.png";
 import fireImg from "./assets/fire.png";
+import gasStationImg from "./assets/gasStation.png"
 
 const GameCanvas = () => {
   // Tanker dimensions
@@ -21,9 +22,11 @@ const GameCanvas = () => {
   const [deliveryMade, setDeliveryMade] = useState(false);
 
   // Gas station
-  const GAS_STATION_WIDTH = 80;
-  const GAS_STATION_HEIGHT = 100;
-  const GAS_Y = 350 - GAS_STATION_HEIGHT; 
+  const GAS_STATION_WIDTH = 1200; // much bigger
+  const GAS_STATION_HEIGHT = 800; // taller station
+ 
+  const GAS_Y = (400 - GAS_STATION_HEIGHT) / 2 + 50; 
+
   const GAS_ENTRY_SPEED = 1; 
   const ROUTE_LENGTH = 15000;
   const [gasStationX, setGasStationX] = useState(800);
@@ -56,15 +59,11 @@ const GameCanvas = () => {
     if (gameOver || deliveryMade) return;
 
     const interval = setInterval(() => {
-      // Random Y between 100 and 250
       const minY = 100;
       const maxY = 150;
       const randomY = Math.random() * (maxY - minY) + minY;
 
-      // Randomly choose obstacle type
       const obstacleType = Math.random() < 0.5 ? "cool" : "fire";
-
-      // Set size based on type
       const width = obstacleType === "cool" ? 500 : 300;
       const height = obstacleType === "cool" ? 400 : 200;
 
@@ -126,11 +125,16 @@ const GameCanvas = () => {
       if (distance >= GAS_APPEAR_DISTANCE && !deliveryMade) {
         setGasStationX((x) => (x > 50 ? x - GAS_ENTRY_SPEED : x));
 
+        const COLLISION_WIDTH = 200;  
+        const COLLISION_HEIGHT = 150; 
+        const COLLISION_X_OFFSET = (GAS_STATION_WIDTH - COLLISION_WIDTH) / 2; 
+        const COLLISION_Y_OFFSET = (GAS_STATION_HEIGHT - COLLISION_HEIGHT) / 2; 
+
         const docking =
-          playerX < gasStationX + GAS_STATION_WIDTH &&
-          playerX + TRUCK_WIDTH > gasStationX &&
-          playerY < GAS_Y + GAS_STATION_HEIGHT &&
-          playerY + TRUCK_HEIGHT > GAS_Y;
+          playerX < gasStationX + COLLISION_X_OFFSET + COLLISION_WIDTH &&
+          playerX + TRUCK_WIDTH > gasStationX + COLLISION_X_OFFSET &&
+          playerY < GAS_Y + COLLISION_Y_OFFSET + COLLISION_HEIGHT &&
+          playerY + TRUCK_HEIGHT > GAS_Y + COLLISION_Y_OFFSET;
 
         if (docking) setDeliveryMade(true);
       }
@@ -138,22 +142,6 @@ const GameCanvas = () => {
 
     return () => clearInterval(loop);
   }, [speed, bullets, gameOver, distance, gasStationX, deliveryMade, playerX, playerY, GAS_Y]);
-
-  // Mobile controls
-  const mobileButtonCommon = {
-    position: "absolute",
-    width: 60,
-    height: 60,
-    borderRadius: "50%",
-    background: "rgba(255,255,255,0.3)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    fontSize: "2rem",
-    color: "#000",
-    userSelect: "none",
-    zIndex: 1000,
-  };
 
   const resetGame = () => {
     setPlayerX(100);
@@ -170,6 +158,7 @@ const GameCanvas = () => {
 
   return (
     <div style={{ position: "relative", width: "100%", height: "100vh", display: "flex", justifyContent: "center", alignItems: "center", background: "#000" }}>
+      {/* keep SVG small for smooth scroll */}
       <svg width={800} height={400}>
         {/* Background */}
         <image href={cityImg} x={bgX} y={0} width={800} height={400} preserveAspectRatio="none" />
@@ -182,44 +171,36 @@ const GameCanvas = () => {
         {obstacles.map((o) => (
           <image key={o.id} href={o.image} x={o.x} y={o.y} width={o.width} height={o.height} preserveAspectRatio="xMidYMid meet" />
         ))}
+        {distance >= GAS_APPEAR_DISTANCE && !deliveryMade && (
+        <image
+          href={gasStationImg}
+          x={gasStationX}
+          y={GAS_Y}             
+          width={500}           
+          height={GAS_STATION_HEIGHT}  
+          preserveAspectRatio="xMidYMid meet"
+        />
+      )}
 
         {/* Bullets */}
         {bullets.map((b) => (
-          <rect key={b.id} x={b.x} y={b.y} width={b.width} height={b.height} fill="yellow" />
+          <rect key={b.id} x={b.x} y={b.y} width={b.width} height={b.height} fill="#32dd18ff" />
         ))}
-
-        {/* Gas Station */}
-        {distance >= GAS_APPEAR_DISTANCE && !deliveryMade && (
-          <>
-            <rect x={gasStationX} y={GAS_Y} width={GAS_STATION_WIDTH} height={GAS_STATION_HEIGHT} fill="green" />
-            <text x={gasStationX + 10} y={GAS_Y + 50} fontSize={14} fill="white">Gas</text>
-          </>
-        )}
 
         {/* HUD */}
         <text x={10} y={20} fontSize={16} fill="#32dd18ff">Speed: {speed}</text>
         <text x={10} y={40} fontSize={16} fill="#32dd18ff">Distance: {distance} / {ROUTE_LENGTH}</text>
 
-        {gameOver && !deliveryMade && <text x={350} y={200} fontSize={28} fill="red">Game Over</text>}
-        {deliveryMade && <text x={350} y={200} fontSize={28} fill="green">Delivery Made!</text>}
+        {/* {gameOver && !deliveryMade && <text x={350} y={200} fontSize={28} fill="red">Game Over</text>}
+        {deliveryMade && <text x={350} y={200} fontSize={28} fill="green">Delivery Made!</text>} */}
       </svg>
 
       {/* Play Again Button */}
       {(gameOver || deliveryMade) && (
         <div onClick={resetGame} style={{ position: "absolute", top: "40%", left: "49%", transform: "translate(-50%, -50%)", padding: "20px 40px", background: "rgba(0,0,0,0.7)", color: "#fff", fontSize: "1.5rem", borderRadius: "10px", cursor: "pointer", zIndex: 1000, textAlign: "center" }}>
+          Delivery Made! <br></br>
           Play Again
         </div>
-      )}
-
-      {/* Mobile Controls */}
-      {isMobile && (
-        <>
-          <div onTouchStart={() => setPlayerY((y) => Math.max(y - 20, 0))} style={{ ...mobileButtonCommon, bottom: 140, left: 60 }}>▲</div>
-          <div onTouchStart={() => setPlayerY((y) => Math.min(y + 20, 380))} style={{ ...mobileButtonCommon, bottom: 20, left: 60 }}>▼</div>
-          <div onTouchStart={() => setPlayerX((x) => Math.max(x - 20, 0))} style={{ ...mobileButtonCommon, bottom: 80, left: 0 }}>◀︎</div>
-          <div onTouchStart={() => setPlayerX((x) => x + 20)} style={{ ...mobileButtonCommon, bottom: 80, left: 120 }}>▶︎</div>
-          <div onTouchStart={() => setBullets((prev) => [...prev, { id: Date.now(), x: playerX + TRUCK_WIDTH / 2, y: playerY + TRUCK_HEIGHT / 2, width: 8, height: 4 }])} style={{ ...mobileButtonCommon, bottom: 80, right: 20 }}>◉</div>
-        </>
       )}
     </div>
   );

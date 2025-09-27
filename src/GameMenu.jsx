@@ -85,7 +85,7 @@ function GameMenu({ onStartGame }) {
           alt="Game Cover"
           style={backgroundStyle}
         />
-        <h1 style={{ fontSize: "10vw", marginBottom: "5vh" }}>MotoPsycho</h1>
+        <h1 style={{ color:"orange",fontSize: "10vw", marginBottom: "5vh" }}>MotoPsycho</h1>
         <button onClick={handleStartClick} style={buttonStyle("#ff0000")}>
           Start Game
         </button>
@@ -101,16 +101,16 @@ function GameMenu({ onStartGame }) {
           alt="Game Cover"
           style={backgroundStyle}
         />
-        <h2 style={{ fontSize: "8vw", marginBottom: "5vh" }}>
-          Choose Your Vehicle
+        <h2 style={{color:" orange", fontSize: "8vw", marginBottom: "5vh" }}>
+           Haul Gass!
         </h2>
         <div style={{ display: "flex", gap: "5vw" }}>
-          <button
+          {/* <button
             onClick={() => handleSelection("bike")}
             style={buttonStyle("#00aaff")}
           >
             Bike
-          </button>
+          </button> */}
           <button
             onClick={() => handleSelection("tanker")}
             style={buttonStyle("#ffaa00")}
