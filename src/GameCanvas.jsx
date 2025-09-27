@@ -58,7 +58,7 @@ const GameCanvas = () => {
     const interval = setInterval(() => {
       // Random Y between 100 and 250
       const minY = 100;
-      const maxY = 250;
+      const maxY = 150;
       const randomY = Math.random() * (maxY - minY) + minY;
 
       // Randomly choose obstacle type
