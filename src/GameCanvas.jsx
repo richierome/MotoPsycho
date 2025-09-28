@@ -1,10 +1,16 @@
 // src/GameCanvas.jsx
 import React, { useEffect, useState } from "react";
 import truck1Img from "./assets/truck1.png"; 
+import truck2Img from "./assets/truck2.png"; 
 import cityImg from "./assets/city.jpg";
 import coolImg from "./assets/cool.png";
 import fireImg from "./assets/fire.png";
-import gasStationImg from "./assets/gasStation.png"
+import gasStationImg from "./assets/gasStation.png";
+
+// Audio clips
+import fuckYoufx from "./assets/fuckYou.mp3";
+import truckHornfx from "./assets/truckHorn.mp3";
+import fasTimes from "./assets/fastTimes.mp3";
 
 const GameCanvas = () => {
   // Tanker dimensions
@@ -26,9 +32,9 @@ const GameCanvas = () => {
   const GAS_STATION_HEIGHT = 800; // taller station
   const GAS_Y = (400 - GAS_STATION_HEIGHT) / 2 + 50; 
   const GAS_ENTRY_SPEED = 1; 
-  const ROUTE_LENGTH = 15000;
+  const ROUTE_LENGTH = 2500;
   const [gasStationX, setGasStationX] = useState(800);
-  const GAS_APPEAR_DISTANCE = 10000;
+  const GAS_APPEAR_DISTANCE = 17000;
 
   // Detect mobile
   const [isMobile, setIsMobile] = useState(false);
@@ -47,12 +53,17 @@ const GameCanvas = () => {
           { id: Date.now(), x: playerX + TRUCK_WIDTH / 2, y: playerY + TRUCK_HEIGHT / 2, width: 8, height: 4 },
         ]);
       }
+
+      // Desktop horn sound on Shift
+      if (e.key === "Shift") {
+        playRandomSound();
+      }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [playerX, playerY]);
 
-  // Obstacles spawn
+  // Obstacles spawn (cool, fire, truck2)
   useEffect(() => {
     if (gameOver || deliveryMade) return;
 
@@ -61,9 +72,23 @@ const GameCanvas = () => {
       const maxY = 150;
       const randomY = Math.random() * (maxY - minY) + minY;
 
-      const obstacleType = Math.random() < 0.5 ? "cool" : "fire";
-      const width = obstacleType === "cool" ? 500 : 300;
-      const height = obstacleType === "cool" ? 400 : 200;
+      const types = ["cool", "fire", "truck2"];
+      const obstacleType = types[Math.floor(Math.random() * types.length)];
+
+      let width, height, image;
+      if (obstacleType === "cool") {
+        width = 500;
+        height = 400;
+        image = coolImg;
+      } else if (obstacleType === "fire") {
+        width = 300;
+        height = 200;
+        image = fireImg;
+      } else if (obstacleType === "truck2") {
+        width = 400;
+        height = 250;
+        image = truck2Img;
+      }
 
       setObstacles((prev) => [
         ...prev,
@@ -75,7 +100,7 @@ const GameCanvas = () => {
           height,
           speed: Math.random() * 5 + 2,
           type: obstacleType,
-          image: obstacleType === "cool" ? coolImg : fireImg, 
+          image,
         },
       ]);
     }, 2500);
@@ -154,6 +179,19 @@ const GameCanvas = () => {
     setGasStationX(800);
   };
 
+  // Play random sound with preset volumes
+  const playRandomSound = () => {
+    const sounds = [
+      { file: fuckYoufx, volume: 0.2 },
+      { file: truckHornfx, volume: 0.5 },
+      { file: fasTimes, volume: 0.2 }
+    ];
+    const randomIndex = Math.floor(Math.random() * sounds.length);
+    const audio = new Audio(sounds[randomIndex].file);
+    audio.volume = sounds[randomIndex].volume;
+    audio.play();
+  };
+
   const mobileButtonCommon = {
     position: "absolute",
     width: 60,
@@ -222,6 +260,8 @@ const GameCanvas = () => {
           <div onTouchStart={() => setPlayerY((y) => Math.min(y + 20, 380))} style={{ ...mobileButtonCommon, bottom: 20, left: 60 }}>▼</div>
           <div onTouchStart={() => setPlayerX((x) => Math.max(x - 20, 0))} style={{ ...mobileButtonCommon, bottom: 80, left: 0 }}>◀︎</div>
           <div onTouchStart={() => setPlayerX((x) => x + 20)} style={{ ...mobileButtonCommon, bottom: 80, left: 120 }}>▶︎</div>
+          
+          {/* Shoot Button */}
           <div
             onTouchStart={() =>
               setBullets((prev) => [
@@ -232,6 +272,14 @@ const GameCanvas = () => {
             style={{ ...mobileButtonCommon, bottom: 80, right: 20 }}
           >
             ◉
+          </div>
+
+          {/* Horn / Voice Button */}
+          <div
+            onTouchStart={playRandomSound}
+            style={{ ...mobileButtonCommon, bottom: 80, right: 100 }}
+          >
+             ◉
           </div>
         </>
       )}
