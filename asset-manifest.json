@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "/MotoPsycho/static/css/main.e6c13ad2.css",
+    "main.js": "/MotoPsycho/static/js/main.a7aafcd6.js",
+    "static/js/453.cb75d7c4.chunk.js": "/MotoPsycho/static/js/453.cb75d7c4.chunk.js",
+    "static/media/fire.png": "/MotoPsycho/static/media/fire.5bc93ce309d6f552c35e.png",
+    "static/media/truck1.png": "/MotoPsycho/static/media/truck1.a28e0e4398f4e67cae99.png",
+    "static/media/cool.png": "/MotoPsycho/static/media/cool.d6c74274cf3e908c592f.png",
+    "static/media/truck2.png": "/MotoPsycho/static/media/truck2.241da4fa7667a16f9416.png",
+    "static/media/gasStation.png": "/MotoPsycho/static/media/gasStation.9874044df8ad092cb0f3.png",
+    "static/media/fastTimes.mp3": "/MotoPsycho/static/media/fastTimes.9f353fb7b7a76f879ab6.mp3",
+    "static/media/fuckYou.mp3": "/MotoPsycho/static/media/fuckYou.ed542d9f464d75d04143.mp3",
+    "static/media/truckHorn.mp3": "/MotoPsycho/static/media/truckHorn.5e069a7afa015ae3e008.mp3",
+    "static/media/city.jpg": "/MotoPsycho/static/media/city.08b698566728e1b0d419.jpg",
+    "index.html": "/MotoPsycho/index.html",
+    "main.e6c13ad2.css.map": "/MotoPsycho/static/css/main.e6c13ad2.css.map",
+    "main.a7aafcd6.js.map": "/MotoPsycho/static/js/main.a7aafcd6.js.map",
+    "453.cb75d7c4.chunk.js.map": "/MotoPsycho/static/js/453.cb75d7c4.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.a7aafcd6.js"
+  ]
+}
