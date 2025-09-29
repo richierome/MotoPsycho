@@ -256,10 +256,10 @@ const GameCanvas = () => {
       {/* Mobile Controls */}
       {isMobile && (
         <>
-          <div onTouchStart={() => setPlayerY((y) => Math.max(y - 20, 0))} style={{ ...mobileButtonCommon, bottom: 140, left: 60 }}>▲</div>
-          <div onTouchStart={() => setPlayerY((y) => Math.min(y + 20, 380))} style={{ ...mobileButtonCommon, bottom: 20, left: 60 }}>▼</div>
-          <div onTouchStart={() => setPlayerX((x) => Math.max(x - 20, 0))} style={{ ...mobileButtonCommon, bottom: 80, left: 0 }}>◀︎</div>
-          <div onTouchStart={() => setPlayerX((x) => x + 20)} style={{ ...mobileButtonCommon, bottom: 80, left: 120 }}>▶︎</div>
+          <div onTouchStart={() => setPlayerY((y) => Math.max(y - 20, 0))} style={{ ...mobileButtonCommon, bottom: 130, left: 60 }}>▲</div>
+          <div onTouchStart={() => setPlayerY((y) => Math.min(y + 20, 380))} style={{ ...mobileButtonCommon, bottom: 25, left: 60 }}>▼</div>
+          <div onTouchStart={() => setPlayerX((x) => Math.max(x - 20, 0))} style={{ ...mobileButtonCommon, bottom: 80, left: 5 }}>◀︎</div>
+          <div onTouchStart={() => setPlayerX((x) => x + 20)} style={{ ...mobileButtonCommon, bottom: 80, left: 115 }}>▶︎</div>
           
           {/* Shoot Button */}
           <div
